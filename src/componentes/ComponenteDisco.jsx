@@ -27,12 +27,11 @@ const ComponenteDisco = () => {
 
 
   return (
-    <div>
-        <h1 className="text-3xl font-bold underline"> ASd </h1>
-        <table className="table-auto">
-            <thead>
+    <div className='container'>
+        <table className="table-fixed border-collapse border">
+            <thead className='border'>
                 <tr>
-                    <th>Id</th>
+                    <th className='border-slate-300'>Id</th>
                     <th>Artista</th>
                     <th>Titulo</th>
                     <th>Duracion</th>
