@@ -1,69 +1,60 @@
-import React, {useState, useEffect} from 'react'
-import { listaDiscos } from '../servicios/DiscoServicio';
+import React, { useState } from 'react'
+import {guardaDiscoServicio} from '../servicios/DiscoServicio'
+import { useNavigate } from 'react-router-dom'
 
-const ComponenteDisco = () => {
-    /*const dummyData =[
-        {
-            "id": 1,
-            "artista": "artista1",
-            "titulo": "el mejor disco",
-            "duracion": 30,
-            "cod": "abc123"
-        },
-        {
-            "id": 2,
-            "artista": "artista2",
-            "titulo": "disco no tan bueno",
-            "duracion": 30,
-            "cod": "bca123"
-        },
-        {
-            "id": 3,
-            "artista": "artista3",
-            "titulo": "masomenos bueno",
-            "duracion": 30,
-            "cod": "aaa123"
-        }
-    ]*/
+export default function ComponenteDisco() {
 
-    const [disco, setDisco] = useState([]);
+    const [artista, setArtista] = useState('')
+    const [titulo, setTitulo] = useState('')
+    const [duracion, setDuracion] = useState('')
+    const [cod, setCodigo] = useState('')
+    const navegador = useNavigate()
+    function guardaDisco(e){
+        e.preventDefault();
 
-    useEffect(() => {
-        listaDiscos().then((respuesta) => {
-            setDisco(respuesta.data);
-        }).catch(error => {
-            console.error(error);
+        const disco = {titulo, artista, cod, duracion}
+        console.log(disco)
+
+        guardaDiscoServicio(disco).then((respuesta) =>{
+            console.log(respuesta.data);
+            navegador('/discos')
         })
-    },[])
-
+    }
   return (
-    <div className='container'>
-        <table className="table-fixed border-collapse border">
-            <thead className='border'>
-                <tr>
-                    <th className='border-slate-300'>Id</th>
-                    <th>Artista</th>
-                    <th>Titulo</th>
-                    <th>Duracion</th>
-                    <th>Codigo</th>
-                </tr>
-            </thead>
-            <tbody>
-               {
-                disco.map(disco => 
-                    <tr key={disco.id}>
-                        <td>{disco.id}</td>
-                        <td>{disco.artista}</td>
-                        <td>{disco.titulo}</td>
-                        <td>{disco.duracion}</td>
-                        <td>{disco.cod}</td>
-                    </tr>
-                )
-               }
-            </tbody>
-        </table>
+    <div>
+        <h2>Agregar Disco</h2>
+        <form>
+            <label>Artista: </label>
+            <input type='text' 
+                   placeholder='ingrese artista' 
+                   name='artista'
+                   value={artista}
+                   onChange={(e) => setArtista(e.target.value)}>     
+            </input>
+            <label>Titulo: </label>
+            <input type='text' 
+                   placeholder='ingrese titulo' 
+                   name='titulo'
+                   value={titulo}
+                   onChange={(e) => setTitulo(e.target.value)}>     
+            </input>
+            <label>Duracion: </label>
+            <input type='text' 
+                   placeholder='ingrese duracion' 
+                   name='duracion'
+                   value={duracion}
+                   onChange={(e) => setDuracion(e.target.value)}>     
+            </input>
+            <label>Codigo: </label>
+            <input type='text' 
+                   placeholder='ingrese codigi' 
+                   name='cofigo'
+                   value={cod}
+                   onChange={(e) => setCodigo(e.target.value)}>     
+            </input>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={guardaDisco}>Agregar</button>
+        </form>
     </div>
+
   )
 }
-
-export default ComponenteDisco

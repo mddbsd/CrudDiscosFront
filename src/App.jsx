@@ -1,9 +1,9 @@
-import ComponenteDisco from "./componentes/ComponenteDisco"
+import ComponenteListaDiscos from "./componentes/ComponenteListaDiscos"
 
 function App() {
   return (
     <>
-    <ComponenteDisco />
+    <ComponenteListaDiscos />
     </>
   )
 }
