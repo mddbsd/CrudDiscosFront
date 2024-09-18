@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import {guardaDiscoServicio} from '../servicios/DiscoServicio'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect} from 'react'
+import {actualizaDisco, guardaDiscoServicio, traeDisco} from '../servicios/DiscoServicio'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export default function ComponenteDisco() {
 
@@ -9,6 +9,8 @@ export default function ComponenteDisco() {
     const [titulo, setTitulo] = useState('')
     const [duracion, setDuracion] = useState('')
     const [cod, setCodigo] = useState('')
+
+    const {id} = useParams()
 
     const [errores, setErrores] = useState({
         artista: '',
@@ -19,17 +21,42 @@ export default function ComponenteDisco() {
 
     const navegador = useNavigate()
 
-    function guardaDisco(e){
+    useEffect(() => {
+        if(id){
+            traeDisco(id).then((respuesta) =>{
+                setArtista(respuesta.data.artista);
+                setTitulo(respuesta.data.titulo);
+                setDuracion(respuesta.data.duracion);
+                setCodigo(respuesta.data.cod);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    },[id])
+
+    function guardaOActualizaDisco(e){
         e.preventDefault();
 
         if(validaFormulario()){
             const disco = {titulo, artista, cod, duracion}
             console.log(disco)
-    
-            guardaDiscoServicio(disco).then((respuesta) =>{
-                console.log(respuesta.data);
-                navegador('/discos')
-            })
+            if(id){
+                actualizaDisco(disco, id).then((respuesta) =>{
+                    console.log(respuesta.data);
+                    navegador('/discos');
+                }).catch(error => {
+                    console.log(error)
+                })
+            } else {            
+                guardaDiscoServicio(disco).then((respuesta) =>{
+                    console.log(respuesta.data);
+                    navegador('/discos')
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+
+
         }
  
     }
@@ -71,9 +98,19 @@ export default function ComponenteDisco() {
 
         return valido
     }
+
+    function paginaTitulo(){
+        if(id){
+            return <h2>Actualiza Disco</h2>
+        } else {
+            return <h2>Agregar Disco</h2>
+        }
+    }
   return (
     <div>
-        <h2>Agregar Disco</h2>
+        {
+           paginaTitulo() 
+        }
         <form>
             <label>Artista: </label>
             <input type='text' 
@@ -110,7 +147,7 @@ export default function ComponenteDisco() {
                    className={`${errores.cod ? classNameError : ''}`}
                    onChange={(e) => setCodigo(e.target.value)}>     
             </input>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={guardaDisco}>Agregar</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={guardaOActualizaDisco}>Agregar</button>
         </form>
     </div>
 

@@ -42,6 +42,12 @@ const router = createBrowserRouter([
     path: "/agrega-disco",
     element: <ComponenteDisco />,
     errorElement: (<div>No se puede agregar</div>)
+  },
+  {
+    //http://localhosyt:5173/actualiza-disco/1
+    path: "/actualiza-disco/:id",
+    element: <ComponenteDisco />,
+    errorElement: (<div>No se puede actualizar</div>)
   }
 ]);
 

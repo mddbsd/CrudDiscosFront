@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { listaDiscos } from '../servicios/DiscoServicio';
+import { borraDisco, listaDiscos } from '../servicios/DiscoServicio';
 import { useNavigate } from  'react-router-dom'
 const ComponenteListaDiscos = () => {
     /*const dummyData =[
@@ -30,14 +30,33 @@ const ComponenteListaDiscos = () => {
     const navegador = useNavigate();
 
     useEffect(() => {
+        traeTodosLosDiscos();
+    },[])
+    
+    function traeTodosLosDiscos(){
         listaDiscos().then((respuesta) => {
             setDisco(respuesta.data);
         }).catch(error => {
             console.error(error);
         })
-    },[])
+    }
+
     function agregarDisco(){
         navegador('/agrega-disco')
+    }
+    //Los acentos invertidos nos permiten insertar codigo
+    //dentro de una cadena de caracteres
+    function actualizaDisco(id){
+        navegador(`/actualiza-disco/${id}`)
+    }
+
+    function quitaDisco(id){
+        console.log(id);
+        borraDisco(id).then((respuesta) =>{
+            traeTodosLosDiscos()
+        }).catch(error => {
+            console.error(error);
+        })
     }
   return (
     <div className='container'>
@@ -50,6 +69,7 @@ const ComponenteListaDiscos = () => {
                     <th>Titulo</th>
                     <th>Duracion</th>
                     <th>Codigo</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,6 +81,10 @@ const ComponenteListaDiscos = () => {
                         <td>{disco.titulo}</td>
                         <td>{disco.duracion}</td>
                         <td>{disco.cod}</td>
+                        <td>
+                            <button className="bg-green-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" onClick={() => actualizaDisco(disco.id)}>Actualizar</button>
+                            <button className="bg-red-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onClick={() => quitaDisco(disco.id)}>Borrar</button>
+                        </td>
                     </tr>
                 )
                }
@@ -71,3 +95,6 @@ const ComponenteListaDiscos = () => {
 }
 
 export default ComponenteListaDiscos
+
+
+
